@@ -47,6 +47,13 @@ wipe_dalvik() {
 write_odex() {
     if [ -z "$BOOTCLASSPATH" ]; then
         export BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar:/system/framework/automotive.jar
+        DEXOPT_BCP_FROM=fallback
+    fi
+    # once per part: what dexopt builds the odex against, for comparing with the running system
+    if [ -z "$DEXOPT_LOGGED" ]; then
+        DEXOPT_LOGGED=1
+        log "dexopt boot classpath (${DEXOPT_BCP_FROM:-environment}): $BOOTCLASSPATH"
+        log "dexopt flags m=y,u=n; system dalvik.vm.dexopt-flags=$(getprop dalvik.vm.dexopt-flags 2>/dev/null)"
     fi
     [ -x /system/bin/dexopt ] || return 1
     /system/bin/dexopt --preopt "$LIVE_APK" "$LIVE_ODEX" "m=y,u=n" || return 1
