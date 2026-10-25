@@ -57,4 +57,6 @@ Needs the car's stock files (`app/<name>.apk`, `app/<name>.odex`, `lib/libautore
 tools/mkpatches.py <ev6|neev|dl3hev> <stock dir> <builds dir> patches
 ```
 
+A small in-place edit of a result (same size, e.g. a few bytecode bytes plus the dex header) doesn't need the stock source: `tools/retarget-delta.py <in.lpd> <old result> <new result> <out.lpd>` rewrites the delta, then update the APK md5 in `manifest` (`lpatch zipadd` on the stock APK) and run `tools/compat-built.py`.
+
 The installer's stock checksums (`comp/2_tbt`) and expected app checksums (`comp/3_bridge`) must match the new set.
